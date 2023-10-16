@@ -1,1 +1,3 @@
-Enunciado P5.pdf
+*.pdf
+.vscode
+*.out

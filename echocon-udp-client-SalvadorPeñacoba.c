@@ -59,7 +59,7 @@ int main(int argc, char** argv){
     aux = recvfrom(sockfd,msg_in,80,0,NULL,NULL);
     ASSERT(aux != -1,"Error recibiendo datagrama: %s\n",strerror(errno));
 
-    printf("%s\n",msg_in);
+    printf("Cadena recibida: %s\n",msg_in);
 
     close(sockfd);
 

@@ -20,7 +20,7 @@ void process_string();
 int main(int argc, char **argv)
 {
 
-    uint16_t puerto = htons(5);
+    uint16_t puerto = htons(2000);
     char msg_in[80];
     char msg_out[80];
     int aux;
@@ -29,14 +29,17 @@ int main(int argc, char **argv)
     struct sockaddr_in client_addr;
     struct sockaddr_in my_addr;
 
+    memset(&client_addr,0,sizeof(client_addr));
+    memset(&my_addr,0,sizeof(my_addr));
+
     ASSERT((argc == 1 || argc == 3), "Uso: %s [-p puerto_servidor]\n", argv[0]);
 
     if (argc == 3)
     {
         ASSERT((strcmp(argv[1], "-p") == 0), "Uso: %s ip_servidor [-p puerto_servidor] cadena\n", argv[0]);
-        sscanf(argv[1], "%hu", &puerto);
+        sscanf(argv[1], "%i", &aux);
         ASSERT((aux > 0 && aux <= 65535), "Error: puerto_servidor no es un puerto válido\n");
-        puerto = htons(puerto);
+        puerto = htons(aux);
     }
 
     my_addr.sin_family = AF_INET;
@@ -66,6 +69,7 @@ int main(int argc, char **argv)
         aux = sendto(sockfd, msg_out, 80, 0, (struct sockaddr *)&client_addr, client_legth);
         ASSERT(aux != -1, "Error enviando datagrama: %s\n", strerror(errno));
     }
+    close(sockfd);
 }
 
 void process_string(char *msg_in, char *msg_out)
