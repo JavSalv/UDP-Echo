@@ -37,8 +37,9 @@ int main(int argc, char** argv){
     aux = (argc == 3) ? 2 : 4;
     if(strlen(argv[aux]) > MAX_LENGHT)
         printf("La cadena será truncada a %i caracteres.\n",MAX_LENGHT);
+
     msg_out2 = strndup(argv[aux],MAX_LENGHT);
-    msg_in2= calloc(MAX_LENGHT+1,sizeof(char));
+    msg_in2= calloc(strlen(msg_out2)+1,sizeof(char));
 
     if(argc == 5){
         ASSERT((strcmp(argv[2],"-p")== 0), "Uso: %s ip_servidor [-p puerto_servidor] cadena\n", argv[0]);
@@ -46,7 +47,7 @@ int main(int argc, char** argv){
         ASSERT((aux > 0 && aux <= 65535),"Error: puerto_servidor no es un puerto válido\n");
         puerto = htons(aux);
     }
-    printf("Puerto: %i, Cadena: %s\n",ntohs(puerto),msg_out2);
+    printf("Enviando %s a %s:%hu\n",msg_out2,argv[1],ntohs(puerto));
 
     //Poblamos el struct de la direccion del socket servidor.
     server_addr.sin_port = puerto;
@@ -59,14 +60,17 @@ int main(int argc, char** argv){
     aux = bind(sockfd, (struct sockaddr*) &my_addr, sizeof(my_addr));
     ASSERT(aux == 0,"Error vinculando socket: %s\n", strerror(errno));
 
-    aux = sendto(sockfd, msg_out2, MAX_LENGHT,0, (struct sockaddr*)&server_addr,sizeof(server_addr));
+    aux = sendto(sockfd, msg_out2,strlen(msg_out2)+1,0, (struct sockaddr*)&server_addr,sizeof(server_addr));
     ASSERT(aux != -1,"Error enviando datagrama: %s\n",strerror(errno));
     printf("Cadena enviada, esperando respuesta...\n");
 
-    aux = recvfrom(sockfd,msg_in2,MAX_LENGHT,0,NULL,NULL);
+    aux = recvfrom(sockfd,msg_in2,strlen(msg_out2)+1,0,NULL,NULL);
     ASSERT(aux != -1,"Error recibiendo datagrama: %s\n",strerror(errno));
 
     printf("Cadena recibida: %s\n",msg_in2);
+
+    free(msg_in2);
+    free(msg_out2);
 
     close(sockfd);
 

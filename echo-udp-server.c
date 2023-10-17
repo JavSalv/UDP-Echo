@@ -74,7 +74,7 @@ int main(int argc, char **argv)
         
         process_string(msg_in2, msg_out2);
 
-        aux = sendto(sockfd, msg_out2, strlen(msg_out2)+1, 0, (struct sockaddr *)&client_addr, client_legth);
+        aux = sendto(sockfd, msg_out2, MAX_LENGHT+1, 0, (struct sockaddr *)&client_addr, client_legth);
         ASSERT(aux != -1, "Error enviando datagrama: %s\n", strerror(errno));
     }
 
