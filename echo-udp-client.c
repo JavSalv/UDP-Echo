@@ -10,20 +10,21 @@
 //Macro assert para comprobar + mensaje de error.
 #define ASSERT(_bool, ...) if (!(_bool)) { fprintf(stderr, __VA_ARGS__); exit(EXIT_FAILURE); }
 
+//Tamaño máximo de string
 #define MAX_LENGHT 80
 
 int main(int argc, char** argv){
 
-    uint16_t puerto = htons(5);
+    int aux;
+    int sockfd;
     struct in_addr addr;
+    uint16_t puerto = htons(5);
+
+    struct sockaddr_in server_addr;
+    struct sockaddr_in my_addr = {.sin_family= AF_INET, .sin_port = 0, .sin_addr.s_addr = INADDR_ANY};
 
     char* msg_in2;
     char* msg_out2;
-
-    int aux;
-    int sockfd;
-    struct sockaddr_in server_addr;
-    struct sockaddr_in my_addr = {.sin_family= AF_INET, .sin_port = 0, .sin_addr.s_addr = INADDR_ANY};
 
     memset(&addr,0,sizeof(addr));
     memset(&server_addr,0,sizeof(server_addr));
