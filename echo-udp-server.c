@@ -1,3 +1,5 @@
+// Practica Tema 5: Salvador Peñacoba, Javier
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -7,18 +9,13 @@
 #include <netinet/ip.h>
 #include <unistd.h>
 
-// Macro assert para comprobar + mensaje de error.
-#define ASSERT(_bool, ...)            \
-    if (!(_bool))                     \
-    {                                 \
-        fprintf(stderr, __VA_ARGS__); \
-        exit(EXIT_FAILURE);           \
-    }
+//Macro assert para comprobar + mensaje de error.
+#define ASSERT(_bool, ...) if (!(_bool)) { fprintf(stderr, __VA_ARGS__); exit(EXIT_FAILURE); }
 
 // Longitud máxima de la cadena a recibir
 #define MAX_LENGHT 80
 
-void process_string();
+void process_string(char* msg_in, char* msg_out);
 
 
 int main(int argc, char **argv)
@@ -54,26 +51,32 @@ int main(int argc, char **argv)
     my_addr.sin_port = puerto;
     my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
+    //Creamos un socket UDP
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     ASSERT(sockfd != -1, "Error creando socket: %s\n", strerror(errno));
 
+    //Enlazamos el socket a una IP y puerto locales
     aux = bind(sockfd, (struct sockaddr *)&my_addr, sizeof(my_addr));
     ASSERT(aux == 0, "Error vinculando socket: %s\n", strerror(errno));
 
     printf("Servidor Echo UDP en  %s escuchando puerto %i\n", inet_ntoa(my_addr.sin_addr), ntohs(puerto));
     fflush(stdout);
 
+    //Bucle principal del Servidor
     while (1)
     {
         client_legth = sizeof(client_addr);
 
+        //Recibimos mensaje desde el cliente
         aux = recvfrom(sockfd, msg_in, MAX_LENGHT+1, 0, (struct sockaddr *)&client_addr, &client_legth);
         ASSERT(aux != -1, "Error recibiendo datagrama: %s\n", strerror(errno));
 
         printf("Recibida string: %s desde %s\n", msg_in, inet_ntoa(client_addr.sin_addr));
-        
+
+        //Procesamos el mensaje según requisitos de la práctica
         process_string(msg_in, msg_out);
 
+        //Enviamos el nuevo mensaje al cliente
         aux = sendto(sockfd, msg_out, MAX_LENGHT+1, 0, (struct sockaddr *)&client_addr, client_legth);
         ASSERT(aux != -1, "Error enviando datagrama: %s\n", strerror(errno));
     }
