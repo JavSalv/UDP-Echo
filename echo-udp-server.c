@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 
     if (argc == 3)
     {
-        ASSERT((strcmp(argv[1], "-p") == 0), "Uso: %s ip_servidor [-p puerto_servidor] cadena\n", argv[0]);
+        ASSERT((strcmp(argv[1], "-p") == 0), "Uso: %s [-p puerto_servidor]\n", argv[0]);
         sscanf(argv[1], "%i", &aux);
         ASSERT((aux > 0 && aux <= 65535), "Error: puerto_servidor no es un puerto válido\n");
         puerto = htons(aux);
@@ -87,9 +87,10 @@ int main(int argc, char **argv)
 //Cambia las mayúsculas por minúsculas y viceversa. Ignora el resto de caracteres.
 void process_string(char *msg_in, char *msg_out)
 {
+    int i;
     strncpy(msg_out,msg_in,MAX_LENGHT);
     
-    for(int i = 0; i < strlen(msg_in); i++){
+    for(i = 0; i < strlen(msg_in); i++){
         if(msg_in[i]>64 && msg_in[i]<91) msg_out[i]+=32;
         else if(msg_in[i]>96 && msg_in[i]<123) msg_out[i]-=32;
     }
