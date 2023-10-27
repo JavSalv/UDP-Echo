@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     if (argc == 3)
     {
         ASSERT((strcmp(argv[1], "-p") == 0), "Uso: %s [-p puerto_servidor]\n", argv[0]);
-        sscanf(argv[1], "%i", &aux);
+        sscanf(argv[2], "%i", &aux);
         ASSERT((aux > 0 && aux <= 65535), "Error: puerto_servidor no es un puerto válido\n");
         puerto = htons(aux);
     }
