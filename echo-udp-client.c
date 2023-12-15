@@ -35,6 +35,7 @@ int main(int argc, char **argv)
 
     ASSERT((argc == 3 || argc == 5), "Uso: %s ip_servidor [-p puerto_servidor] cadena\n", argv[0]);
 
+    //Extraemos dirección IP del primer argumento
     ASSERT((inet_aton(argv[1], &addr) == 1), "Uso: %s ip_servidor [-p puerto_servidor] cadena\n", argv[0]);
 
     aux = (argc == 3) ? 2 : 4;
@@ -53,7 +54,7 @@ int main(int argc, char **argv)
     }
     printf("Enviando %s a %s:%hu\n", msg_out2, argv[1], ntohs(puerto));
 
-    // Poblamos el struct de la direccion del socket servidor.
+    // Poblamos el struct de la direccion del socket servidor con el puerto y la dirección que nos dan.
     server_addr.sin_port = puerto;
     server_addr.sin_addr = addr;
     server_addr.sin_family = AF_INET;
